@@ -2,7 +2,10 @@
     <string name="app_name">Music_Player</string>
     <string name="Music">Music Player</string>
     <string name="title">The title</string>
-    <string name="previous"><![CDATA[<]]></string>
-    <string name="next"><![CDATA[>]]></string>
-    <string name="pause">||</string>
+    <string name="previous">previous</string>
+    <string name="next">next</string>
+    <string name="pause">pause</string>
+    <string name="shuffle">shuffle</string>
+    <string name="repeat">repeat</string>
+    <string name="image">image</string>
 </resources>
