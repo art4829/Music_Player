@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/previousButton"
         android:layout_width="48dp"
         android:layout_height="45dp"
         android:layout_marginBottom="16dp"
@@ -58,7 +58,7 @@
         app:srcCompat="@drawable/ic_skip_previous_black_24dp" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/nextButton"
         android:layout_width="48dp"
         android:layout_height="45dp"
         android:layout_marginBottom="16dp"
@@ -93,7 +93,7 @@
         app:srcCompat="@drawable/ic_shuffle_black_24dp" />
 
     <ImageButton
-        android:id="@+id/imageButton5"
+        android:id="@+id/repeatButton"
         android:layout_width="42dp"
         android:layout_height="39dp"
         android:layout_marginBottom="16dp"

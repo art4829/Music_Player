@@ -55,7 +55,8 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
     }
-
+    fun ClosedRange<Int>.random() =
+            Random().nextInt((endInclusive + 1) - start) +  start
     private fun createPlayer(){
 
         var songsJob = async {
@@ -72,25 +73,28 @@ class MainActivity : AppCompatActivity() {
             songArtist = findViewById(R.id.songArtist)
             var playButton = findViewById<ImageButton>(R.id.playButton)
             var shuffleButton = findViewById<ImageButton>(R.id.shuffleButton)
-
-
+            var previousButton = findViewById<ImageButton>(R.id.previousButton)
+            var nextButton=findViewById<ImageButton>(R.id.nextButton)
+            var song = songs[0]
+            var idx=0
                 fun playRandom() {
                     Collections.shuffle(songs)
-                    val song = songs[0]
+                    idx=(0..songs.size).random()
+                    val randomsong=songs[idx]
                     mediaPlayer?.reset()
-                    mediaPlayer = MediaPlayer.create(ctx,song.uri)
+                    mediaPlayer = MediaPlayer.create(ctx,randomsong.uri)
                     mediaPlayer?.setOnCompletionListener {
                         playRandom()
                     }
-                    albumArt?.imageURI = song.albumArt
-                    songTitle?.text = song.title
-                    songArtist?.text = song.artist
+                    albumArt?.imageURI = randomsong.albumArt
+                    songTitle?.text = randomsong.title
+                    songArtist?.text = randomsong.artist
                     mediaPlayer?.start()
                     playButton?.imageResource = R.drawable.ic_pause_black_24dp
                 }
 
                 fun playOrPause() {
-                    var songPlaying:Boolean? = mediaPlayer?.isPlaying
+                    val songPlaying:Boolean? = mediaPlayer?.isPlaying
 
                     if(songPlaying == true){
                         mediaPlayer?.pause()
@@ -101,15 +105,53 @@ class MainActivity : AppCompatActivity() {
                         playButton?.imageResource = R.drawable.ic_pause_black_24dp
                     }
                 }
+
+                fun playPrevious(){
+                    if(idx==0){
+                        toast("No previous song")
+                    }else {
+                        idx--
+                        song = songs[idx]
+                        mediaPlayer?.reset()
+                        mediaPlayer = MediaPlayer.create(ctx, song.uri)
+                        mediaPlayer?.setOnCompletionListener {
+                            playPrevious()
+                        }
+                        albumArt?.imageURI = song.albumArt
+                        songTitle?.text = song.title
+                        songArtist?.text = song.artist
+                        mediaPlayer?.start()
+                        playButton?.imageResource = R.drawable.ic_pause_black_24dp
+                    }
+                }
+                fun playNext(){
+                    idx++
+                    song=songs[idx]
+                    mediaPlayer?.reset()
+                    mediaPlayer = MediaPlayer.create(ctx,song.uri)
+                    mediaPlayer?.setOnCompletionListener {
+                        playNext()
+                    }
+                    albumArt?.imageURI = song.albumArt
+                    songTitle?.text = song.title
+                    songArtist?.text = song.artist
+                    mediaPlayer?.start()
+                    playButton?.imageResource = R.drawable.ic_pause_black_24dp
+                }
             shuffleButton.setOnClickListener{
                 playRandom()
             }
             playButton.setOnClickListener{
                 playOrPause()
             }
-            playRandom()
+            nextButton.setOnClickListener{
+                playNext()
+            }
+            previousButton.setOnClickListener{
+                playPrevious()
+            }
 
-
+//Put every played song in an array for previous. Here it just goes through with the index.
         }
     }
 

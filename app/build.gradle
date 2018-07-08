@@ -13,11 +13,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
 }
@@ -33,4 +35,5 @@ dependencies {
     implementation 'com.mtechviral.mplaylib:mplaylib:1.0.0'
     implementation 'org.jetbrains.anko:anko:0.10.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.21.2'
+
 }
