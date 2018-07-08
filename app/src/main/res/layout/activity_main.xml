@@ -8,7 +8,7 @@
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:id="@+id/textview"
+        android:id="@+id/songId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/songArtist"
         android:layout_width="263dp"
         android:layout_height="22dp"
         android:layout_marginBottom="120dp"
@@ -70,7 +70,7 @@
         app:srcCompat="@drawable/ic_skip_next_black_24dp" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/playButton"
         android:layout_width="48dp"
         android:layout_height="45dp"
         android:layout_marginBottom="16dp"
@@ -82,15 +82,15 @@
         app:srcCompat="@drawable/ic_pause_black_24dp" />
 
     <ImageButton
-        android:id="@+id/imageButton4"
+        android:id="@+id/shuffleButton"
         android:layout_width="42dp"
         android:layout_height="39dp"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="32dp"
+        android:contentDescription="@string/shuffle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_shuffle_black_24dp"
-        android:contentDescription="@string/shuffle"/>
+        app:srcCompat="@drawable/ic_shuffle_black_24dp" />
 
     <ImageButton
         android:id="@+id/imageButton5"
@@ -104,15 +104,15 @@
         android:contentDescription="@string/repeat"/>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/albumArt"
         android:layout_width="244dp"
         android:layout_height="211dp"
         android:layout_marginBottom="172dp"
+        android:contentDescription="@string/image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/image"/>
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 
 </android.support.constraint.ConstraintLayout>

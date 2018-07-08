@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     var albumArt: ImageView? = null
 
-    var playButton: ImageButton? = null
-    var shuffleButton: ImageButton? = null
-
     var songTitle: TextView? = null
     var songArtist : TextView? = null
 
@@ -66,59 +63,18 @@ class MainActivity : AppCompatActivity() {
             songFinder.prepare()
             songFinder.allSongs
         }
+        setContentView(R.layout.activity_main)
 
         launch(kotlinx.coroutines.experimental.android.UI){
             val songs = songsJob.await()
-
-            val playerUI = object:AnkoComponent<MainActivity>{
-                override fun createView(ui: AnkoContext<MainActivity>)= with(ui) {
-
-                    relativeLayout{
-                        backgroundColor = Color.BLACK
-
-                        albumArt = imageView{
-                            scaleType = ImageView.ScaleType.FIT_CENTER
-                        }.lparams(matchParent, matchParent)
-
-                        verticalLayout{
-                            backgroundColor = Color.parseColor("#99000000")
-                            songTitle = textView{
-                                textColor = Color.WHITE
-                                typeface = Typeface.DEFAULT_BOLD
-                                textSize = 18f
-                            }
-
-                            songArtist = textView{
-                                textColor = Color.WHITE
-                            }
-
-                            linearLayout{
-                                playButton = imageButton{
-                                    imageResource = R.drawable.ic_play_arrow_black_24dp
-                                    onClick {
-                                        playOrPause()
-                                    }
-                                }.lparams(0, wrapContent,0.5f)
-
-                                shuffleButton = imageButton{
-                                    imageResource = R.drawable.ic_shuffle_black_24dp
-                                    onClick {
-                                        playRandom()
-                                    }
-                                }.lparams(0, wrapContent,0.5f)
-                            }.lparams(matchParent, wrapContent){
-                                topMargin = dip(5)
-                            }
+            albumArt = findViewById(R.id.albumArt)
+            songTitle = findViewById(R.id.songId)
+            songArtist = findViewById(R.id.songArtist)
+            var playButton = findViewById<ImageButton>(R.id.playButton)
+            var shuffleButton = findViewById<ImageButton>(R.id.shuffleButton)
 
 
-
-                        }.lparams(matchParent, wrapContent){
-                            alignParentBottom()
-                        }
-                    }
-
-                }
-                fun playRandom(){
+                fun playRandom() {
                     Collections.shuffle(songs)
                     val song = songs[0]
                     mediaPlayer?.reset()
@@ -133,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                     playButton?.imageResource = R.drawable.ic_pause_black_24dp
                 }
 
-                fun playOrPause(){
+                fun playOrPause() {
                     var songPlaying:Boolean? = mediaPlayer?.isPlaying
 
                     if(songPlaying == true){
@@ -145,9 +101,13 @@ class MainActivity : AppCompatActivity() {
                         playButton?.imageResource = R.drawable.ic_pause_black_24dp
                     }
                 }
+            shuffleButton.setOnClickListener{
+                playRandom()
             }
-            playerUI.setContentView(this@MainActivity)
-            playerUI.playRandom()
+            playButton.setOnClickListener{
+                playOrPause()
+            }
+            playRandom()
 
 
         }
