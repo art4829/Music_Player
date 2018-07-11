@@ -21,6 +21,7 @@ import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     var songTitle: TextView? = null
     var songArtist : TextView? = null
+
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -78,17 +80,16 @@ class MainActivity : AppCompatActivity() {
             var song = songs[0]
             var idx=0
                 fun playRandom() {
-                    Collections.shuffle(songs)
                     idx=(0..songs.size).random()
-                    val randomsong=songs[idx]
+                    song=songs[idx]
                     mediaPlayer?.reset()
-                    mediaPlayer = MediaPlayer.create(ctx,randomsong.uri)
+                    mediaPlayer = MediaPlayer.create(ctx,song.uri)
                     mediaPlayer?.setOnCompletionListener {
                         playRandom()
                     }
-                    albumArt?.imageURI = randomsong.albumArt
-                    songTitle?.text = randomsong.title
-                    songArtist?.text = randomsong.artist
+                    albumArt?.imageURI = song.albumArt
+                    songTitle?.text = song.title
+                    songArtist?.text = song.artist
                     mediaPlayer?.start()
                     playButton?.imageResource = R.drawable.ic_pause_black_24dp
                 }
@@ -105,18 +106,26 @@ class MainActivity : AppCompatActivity() {
                         playButton?.imageResource = R.drawable.ic_pause_black_24dp
                     }
                 }
+                //shuffle is not a button, it should auto, so shufle on cha bhanne collections. shuffle garne ani tei list bata garne.
 
                 fun playPrevious(){
+
                     if(idx==0){
                         toast("No previous song")
                     }else {
+
                         idx--
                         song = songs[idx]
                         mediaPlayer?.reset()
                         mediaPlayer = MediaPlayer.create(ctx, song.uri)
+//                        if(mediaPlayer?.duration!!<1000){
+//                            toast("yo")
+//                            idx--
+//                        }
                         mediaPlayer?.setOnCompletionListener {
                             playPrevious()
                         }
+
                         albumArt?.imageURI = song.albumArt
                         songTitle?.text = song.title
                         songArtist?.text = song.artist
