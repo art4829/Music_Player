@@ -12,9 +12,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.mtechviral.mplaylib.MusicFinder
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -66,34 +64,31 @@ class MainActivity : AppCompatActivity() {
             songFinder.prepare()
             songFinder.allSongs
         }
+        val shuffledSongsJob =
+                async {
+                    val songFinder = MusicFinder(contentResolver)
+                    songFinder.prepare()
+                    songFinder.allSongs
+                }
         setContentView(R.layout.activity_main)
 
         launch(kotlinx.coroutines.experimental.android.UI){
             val songs = songsJob.await()
+
             albumArt = findViewById(R.id.albumArt)
             songTitle = findViewById(R.id.songId)
             songArtist = findViewById(R.id.songArtist)
-            var playButton = findViewById<ImageButton>(R.id.playButton)
-            var shuffleButton = findViewById<ImageButton>(R.id.shuffleButton)
-            var previousButton = findViewById<ImageButton>(R.id.previousButton)
-            var nextButton=findViewById<ImageButton>(R.id.nextButton)
+            val playButton = findViewById<ImageButton>(R.id.playButton)
+//            var shuffleButton = findViewById<ImageButton>(R.id.shuffleButton)
+            val shuffleButton= findViewById<ToggleButton>(R.id.shuffleButton)
+            val previousButton = findViewById<ImageButton>(R.id.previousButton)
+            val nextButton=findViewById<ImageButton>(R.id.nextButton)
             var song = songs[0]
             var idx=0
-                fun playRandom() {
-                    idx=(0..songs.size).random()
-                    song=songs[idx]
-                    mediaPlayer?.reset()
-                    mediaPlayer = MediaPlayer.create(ctx,song.uri)
-                    mediaPlayer?.setOnCompletionListener {
-                        playRandom()
-                    }
-                    albumArt?.imageURI = song.albumArt
-                    songTitle?.text = song.title
-                    songArtist?.text = song.artist
-                    mediaPlayer?.start()
-                    playButton?.imageResource = R.drawable.ic_pause_black_24dp
-                }
-
+            var shuffle=false
+            val shuffledSongs= shuffledSongsJob.await()
+//            val shuffleSongs= songs.()
+            Collections.shuffle(shuffledSongs)
                 fun playOrPause() {
                     val songPlaying:Boolean? = mediaPlayer?.isPlaying
 
@@ -108,6 +103,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 //shuffle is not a button, it should auto, so shufle on cha bhanne collections. shuffle garne ani tei list bata garne.
 
+            fun media(){
+                mediaPlayer?.reset()
+                mediaPlayer = MediaPlayer.create(ctx,song.uri)
+                albumArt?.imageURI = song.albumArt
+                songTitle?.text = song.title
+                songArtist?.text = song.artist
+                mediaPlayer?.start()
+                playButton?.imageResource = R.drawable.ic_pause_black_24dp
+            }
                 fun playPrevious(){
 
                     if(idx==0){
@@ -115,7 +119,11 @@ class MainActivity : AppCompatActivity() {
                     }else {
 
                         idx--
-                        song = songs[idx]
+                        if(shuffle){
+                            song=shuffledSongs[idx]
+                        }else {
+                            song = songs[idx]
+                        }
                         mediaPlayer?.reset()
                         mediaPlayer = MediaPlayer.create(ctx, song.uri)
 //                        if(mediaPlayer?.duration!!<1000){
@@ -135,21 +143,51 @@ class MainActivity : AppCompatActivity() {
                 }
                 fun playNext(){
                     idx++
-                    song=songs[idx]
+                    if(shuffle){
+                        song=shuffledSongs[idx]
+                    }else {
+                        song = songs[idx]
+                    }
                     mediaPlayer?.reset()
                     mediaPlayer = MediaPlayer.create(ctx,song.uri)
-                    mediaPlayer?.setOnCompletionListener {
-                        playNext()
-                    }
+//                    mediaPlayer?.setOnCompletionListener {
+//                        playNext()
+//                    }
                     albumArt?.imageURI = song.albumArt
                     songTitle?.text = song.title
                     songArtist?.text = song.artist
                     mediaPlayer?.start()
                     playButton?.imageResource = R.drawable.ic_pause_black_24dp
                 }
-            shuffleButton.setOnClickListener{
-                playRandom()
+//                fun shuffleon(){
+//
+//                    Collections.shuffle(shuffledSongs)
+//                    song=shuffledSongs[0]
+//                    media()
+//                }
+//                fun shuffleoff(){
+//
+//                    idx=songs.indexOf(song)
+//                    song=songs[idx]
+//
+//                    media()
+//                }
+
+
+            shuffleButton?.setOnCheckedChangeListener { buttonView, isChecked ->
+                if(isChecked){
+                    Toast.makeText(this@MainActivity, "Shuffle On", Toast.LENGTH_SHORT).show()
+
+                    shuffle=true
+                }else{
+                    Toast.makeText(this@MainActivity, "Shuffle Off", Toast.LENGTH_SHORT).show()
+
+                    shuffle=false
+                }
+
+
             }
+
             playButton.setOnClickListener{
                 playOrPause()
             }
