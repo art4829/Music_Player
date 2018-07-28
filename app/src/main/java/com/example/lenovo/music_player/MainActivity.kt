@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val updateSongTime=object:Runnable{
         override fun run() {
             startTime = mediaPlayer!!.currentPosition.toDouble()
+            finalTime= mediaPlayer!!.duration.toDouble()
             starttiming!!.text = String.format("%d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(startTime.toLong()),
                     TimeUnit.MILLISECONDS.toSeconds(startTime.toLong()) -
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             endtiming!!.text = String.format("%d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes((finalTime-startTime).toLong()),
                     TimeUnit.MILLISECONDS.toSeconds((finalTime-startTime).toLong()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((finalTime-startTime).toLong())))
-
+            seekBar!!.max=finalTime.toInt()
             seekBar!!.progress=startTime.toInt()
                 myHandler.postDelayed(this,100)
         }
