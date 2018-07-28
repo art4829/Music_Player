@@ -134,8 +134,10 @@ class MainActivity : AppCompatActivity() {
                     if(idx==0){
                         toast("No previous song")
                     }else {
+                        if(mediaPlayer!!.currentPosition<2000){
+                            idx--
+                        }
 
-                        idx--
                         if(shuffle){
                             song=shuffledSongs[idx]
                         }else {

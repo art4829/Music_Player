@@ -14,41 +14,42 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="412dp"
         android:text="@string/Music"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="265dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="68dp"
+        android:layout_width="285dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="112dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/songArtist"
-        android:layout_width="263dp"
-        android:layout_height="22dp"
-        android:layout_marginBottom="120dp"
+        android:layout_width="262dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="176dp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/previousButton"
-        android:layout_width="48dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="120dp"
+        android:layout_width="57dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="112dp"
         android:background="@null"
         android:contentDescription="@string/previous"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,10 +58,10 @@
 
     <ImageButton
         android:id="@+id/nextButton"
-        android:layout_width="48dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="120dp"
+        android:layout_width="57dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="112dp"
         android:background="@null"
         android:contentDescription="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -69,9 +70,9 @@
 
     <ImageButton
         android:id="@+id/playButton"
-        android:layout_width="48dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="57dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="32dp"
         android:background="@null"
         android:contentDescription="@string/pause"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -83,41 +84,41 @@
         android:id="@+id/repeatButton"
         android:layout_width="42dp"
         android:layout_height="39dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginEnd="32dp"
+        android:contentDescription="@string/repeat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_repeat_one_black_24dp"
-        android:contentDescription="@string/repeat"/>
+        app:srcCompat="@drawable/ic_repeat_one_black_24dp" />
 
     <ImageView
         android:id="@+id/albumArt"
-        android:layout_width="244dp"
-        android:layout_height="211dp"
-        android:layout_marginBottom="172dp"
+        android:layout_width="339dp"
+        android:layout_height="310dp"
+        android:layout_marginTop="76dp"
         android:contentDescription="@string/image"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <ToggleButton
         android:id="@+id/shuffleButton"
         android:layout_width="42dp"
         android:layout_height="39dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="44dp"
         android:layout_marginStart="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/ic_toggle"
         android:textOff=""
         android:textOn=""
-        android:background="@drawable/ic_toggle"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/txt1"
         android:layout_width="37dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="112dp"
         android:layout_marginStart="32dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
@@ -127,8 +128,8 @@
         android:id="@+id/txt2"
         android:layout_width="37dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="64dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="112dp"
+        android:layout_marginEnd="24dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
