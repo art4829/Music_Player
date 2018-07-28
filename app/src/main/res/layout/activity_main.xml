@@ -26,15 +26,13 @@
         android:id="@+id/seekBar"
         android:layout_width="265dp"
         android:layout_height="32dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="68dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-       />
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/songArtist"
@@ -114,6 +112,26 @@
         android:textOff=""
         android:textOn=""
         android:background="@drawable/ic_toggle"/>
+
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="37dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="64dp"
+        android:layout_marginStart="32dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txt2"
+        android:layout_width="37dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="32dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -4,11 +4,10 @@ package com.example.lenovo.music_player
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.view.View
@@ -17,34 +16,58 @@ import com.mtechviral.mplaylib.MusicFinder
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import java.util.*
-import kotlin.collections.ArrayList
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
 
-    var albumArt: ImageView? = null
-
-    var songTitle: TextView? = null
-    var songArtist : TextView? = null
-
-
+    private var albumArt: ImageView? = null
+    private var songTitle: TextView? = null
+    private var songArtist : TextView? = null
     private var mediaPlayer: MediaPlayer? = null
+    private val myHandler=Handler()
+    
+    
+    private var seekBar:SeekBar?=null
+    private var playButton:ImageButton?=null
+    private var previousButton:ImageButton?=null
+    private var nextButton:ImageButton?=null
+    private var shuffleButton:ToggleButton?=null
+    private var starttiming:TextView?=null
+    private var endtiming:TextView?=null
+    private var startTime=0.00
+    private var finalTime=0.00
+
+    private val updateSongTime=object:Runnable{
+        override fun run() {
+            startTime = mediaPlayer!!.currentPosition.toDouble()
+            starttiming!!.text = String.format("%d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(startTime.toLong()),
+                    TimeUnit.MILLISECONDS.toSeconds(startTime.toLong()) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime.toLong())))
+            endtiming!!.text = String.format("%d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes((finalTime-startTime).toLong()),
+                    TimeUnit.MILLISECONDS.toSeconds((finalTime-startTime).toLong()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((finalTime-startTime).toLong())))
+
+            seekBar!!.progress=startTime.toInt()
+                myHandler.postDelayed(this,100)
+        }
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-
-            //Ask for permission
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),0)
         }else{
             createPlayer()
         }
     }
 
+    
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -55,11 +78,14 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
     }
-    fun ClosedRange<Int>.random() =
-            Random().nextInt((endInclusive + 1) - start) +  start
-    private fun createPlayer(){
 
-        var songsJob = async {
+
+    private fun ClosedRange<Int>.random() =
+            Random().nextInt((endInclusive + 1) - start) +  start
+
+
+    private fun createPlayer(){
+        val songsJob = async {
             val songFinder = MusicFinder(contentResolver)
             songFinder.prepare()
             songFinder.allSongs
@@ -73,47 +99,37 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         launch(kotlinx.coroutines.experimental.android.UI){
-            val songs = songsJob.await()
-
             albumArt = findViewById(R.id.albumArt)
             songTitle = findViewById(R.id.songId)
             songArtist = findViewById(R.id.songArtist)
-            val playButton = findViewById<ImageButton>(R.id.playButton)
-//            var shuffleButton = findViewById<ImageButton>(R.id.shuffleButton)
-            val shuffleButton= findViewById<ToggleButton>(R.id.shuffleButton)
-            val previousButton = findViewById<ImageButton>(R.id.previousButton)
-            val nextButton=findViewById<ImageButton>(R.id.nextButton)
+            val songs = songsJob.await()
+            playButton = findViewById<ImageButton>(R.id.playButton)
+            shuffleButton= findViewById<ToggleButton>(R.id.shuffleButton)
+            previousButton = findViewById<ImageButton>(R.id.previousButton)
+            nextButton=findViewById<ImageButton>(R.id.nextButton)
+            seekBar=findViewById<View>(R.id.seekBar) as SeekBar
             var song = songs[0]
             var idx=0
             var shuffle=false
             val shuffledSongs= shuffledSongsJob.await()
-//            val shuffleSongs= songs.()
+            starttiming=findViewById<View>(R.id.txt1) as TextView
+            endtiming=findViewById<View>(R.id.txt2) as TextView
+
             Collections.shuffle(shuffledSongs)
+
                 fun playOrPause() {
                     val songPlaying:Boolean? = mediaPlayer?.isPlaying
-
                     if(songPlaying == true){
                         mediaPlayer?.pause()
                         playButton?.imageResource = R.drawable.ic_play_arrow_black_24dp
                     }
                     else{
                         mediaPlayer?.start()
+                        timing()
                         playButton?.imageResource = R.drawable.ic_pause_black_24dp
                     }
                 }
-                //shuffle is not a button, it should auto, so shufle on cha bhanne collections. shuffle garne ani tei list bata garne.
-
-            fun media(){
-                mediaPlayer?.reset()
-                mediaPlayer = MediaPlayer.create(ctx,song.uri)
-                albumArt?.imageURI = song.albumArt
-                songTitle?.text = song.title
-                songArtist?.text = song.artist
-                mediaPlayer?.start()
-                playButton?.imageResource = R.drawable.ic_pause_black_24dp
-            }
                 fun playPrevious(){
-
                     if(idx==0){
                         toast("No previous song")
                     }else {
@@ -126,18 +142,14 @@ class MainActivity : AppCompatActivity() {
                         }
                         mediaPlayer?.reset()
                         mediaPlayer = MediaPlayer.create(ctx, song.uri)
-//                        if(mediaPlayer?.duration!!<1000){
-//                            toast("yo")
-//                            idx--
-//                        }
                         mediaPlayer?.setOnCompletionListener {
                             playPrevious()
                         }
-
                         albumArt?.imageURI = song.albumArt
                         songTitle?.text = song.title
                         songArtist?.text = song.artist
                         mediaPlayer?.start()
+                        timing()
                         playButton?.imageResource = R.drawable.ic_pause_black_24dp
                     }
                 }
@@ -150,58 +162,67 @@ class MainActivity : AppCompatActivity() {
                     }
                     mediaPlayer?.reset()
                     mediaPlayer = MediaPlayer.create(ctx,song.uri)
-//                    mediaPlayer?.setOnCompletionListener {
-//                        playNext()
-//                    }
+                    mediaPlayer?.setOnCompletionListener {
+                                                playNext()
+                    }
                     albumArt?.imageURI = song.albumArt
                     songTitle?.text = song.title
                     songArtist?.text = song.artist
                     mediaPlayer?.start()
+                    timing()
                     playButton?.imageResource = R.drawable.ic_pause_black_24dp
                 }
-//                fun shuffleon(){
 //
-//                    Collections.shuffle(shuffledSongs)
-//                    song=shuffledSongs[0]
-//                    media()
-//                }
-//                fun shuffleoff(){
-//
-//                    idx=songs.indexOf(song)
-//                    song=songs[idx]
-//
-//                    media()
-//                }
 
 
-            shuffleButton?.setOnCheckedChangeListener { buttonView, isChecked ->
+            shuffleButton!!.setOnCheckedChangeListener { buttonView, isChecked ->
                 if(isChecked){
                     Toast.makeText(this@MainActivity, "Shuffle On", Toast.LENGTH_SHORT).show()
-
                     shuffle=true
                 }else{
                     Toast.makeText(this@MainActivity, "Shuffle Off", Toast.LENGTH_SHORT).show()
-
                     shuffle=false
                 }
 
 
             }
 
-            playButton.setOnClickListener{
+            playButton!!.setOnClickListener{
                 playOrPause()
             }
-            nextButton.setOnClickListener{
+            nextButton!!.setOnClickListener{
                 playNext()
             }
-            previousButton.setOnClickListener{
+            previousButton!!.setOnClickListener{
                 playPrevious()
             }
-
-//Put every played song in an array for previous. Here it just goes through with the index.
+            seekBar!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
+                    if(b){
+                        mediaPlayer?.seekTo(i)
+                    }
+                }
+                override fun onStartTrackingTouch(seekBar: SeekBar) {
+                }
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                }
+            })
         }
     }
 
+    private fun timing(){
+        finalTime=mediaPlayer!!.duration.toDouble()
+        startTime=mediaPlayer!!.currentPosition.toDouble()
+        if(oneTimeOnly==0){
+            seekBar!!.max=finalTime.toInt()
+            oneTimeOnly=1
+        }
+        seekBar!!.progress=startTime.toInt()
+        myHandler.postDelayed(updateSongTime,100)
+    }
+    companion object {
+        var oneTimeOnly=0
+    }
     override fun onDestroy() {
         mediaPlayer?.release()
         super.onDestroy()
