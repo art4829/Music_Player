@@ -28,7 +28,9 @@ class MainActivity : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
     private val myHandler=Handler()
     
-    
+
+
+
     private var seekBar:SeekBar?=null
     private var playButton:ImageButton?=null
     private var previousButton:ImageButton?=null
